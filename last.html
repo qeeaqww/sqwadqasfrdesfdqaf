@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic 3D Rotating Cube with Modern Timer</title>
+  <style>
+    :root {
+      --timer-distance: 200px;
+      --primary-color: #ea4c89;
+      --secondary-color: #ffffff;
+      --background-gradient: linear-gradient(135deg, #1e3c72, #2a5298, #000428, #004e92);
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--background-gradient);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .scene {
+      width: 300px;
+      height: 300px;
+      perspective: 1000px;
+      filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.7));
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: smoothRotate 12s infinite linear;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .front { transform: translateZ(150px); }
+    .back { transform: translateZ(-150px) rotateY(180deg); }
+    .right { transform: rotateY(90deg) translateZ(150px); }
+    .left { transform: rotateY(-90deg) translateZ(150px); }
+    .top { transform: rotateX(90deg) translateZ(150px); }
+    .bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+    @keyframes smoothRotate {
+      0% { transform: rotateX(0deg) rotateY(0deg); }
+      25% { transform: rotateX(90deg) rotateY(90deg); }
+      50% { transform: rotateX(180deg) rotateY(180deg); }
+      75% { transform: rotateX(270deg) rotateY(270deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .timer {
+      margin-top: var(--timer-distance);
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-family: 'Arial', sans-serif;
+      user-select: none;
+    }
+
+    .timer-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      width: 80px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      color: var(--secondary-color);
+    }
+
+    .timer-box span {
+      display: block;
+      font-size: 36px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .timer-box .label {
+      font-size: 14px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    #birthday-message {
+      color: var(--primary-color);
+      font-size: 48px;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+      text-align: center;
+      animation: pulse 1.5s infinite ease-in-out;
+      margin-top: 80px; /* Move the message further down */
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Sound toggle button */
+    .sound-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-size: cover;
+      background-position: center;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    .sound-on {
+      background-image: url('sound-on.png'); /* Replace with your "sound on" logo */
+    }
+
+    .sound-off {
+      background-image: url('no-sound.png'); /* Replace with your "sound off" logo */
+    }
+
+    .sound-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 1000;
+  background-color: transparent; /* Ensure no background color */
+}
+
+#birthday-message {
+  color: var(--primary-color);
+  font-size: 48px;
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+  text-align: center;
+  animation: pulse 1.5s infinite ease-in-out;
+  margin-top: 150px; /* Adjust this value to change the distance */
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="cube">
+      <div class="cube-face front"></div>
+      <div class="cube-face back"></div>
+      <div class="cube-face right"></div>
+      <div class="cube-face left"></div>
+      <div class="cube-face top"></div>
+      <div class="cube-face bottom"></div>
+    </div>
+  </div>
+  <div class="timer" id="timer">
+    <div class="timer-box">
+      <span id="days">0</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="timer-box">
+      <span id="hours">0</span>
+      <span class="label">Hours</span>
+      </div>
+      <div class="timer-box">
+      <span id="minutes">0</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="timer-box">
+      <span id="seconds">0</span>
+      <span class="label">Seconds</span>
+    </div>
+  </div>
+
+  <audio id="background-music" loop autoplay>
+    <source src="sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  
+
+  <button class="sound-toggle sound-on" id="soundToggle"></button>
+
+
+  
+  <script>
+    const soundToggleButton = document.getElementById('soundToggle');
+    const backgroundMusic = document.getElementById('background-music');
+  
+    backgroundMusic.play();
+  
+    soundToggleButton.addEventListener('click', () => {
+      if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        soundToggleButton.classList.remove('sound-off');
+        soundToggleButton.classList.add('sound-on');
+      } else {
+        backgroundMusic.pause();
+        soundToggleButton.classList.remove('sound-on');
+        soundToggleButton.classList.add('sound-off');
+      }
+    });
+  
+    const imageSets = [
+      ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'],
+      ['7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg'],
+      ['13.jpg', '14.jpg', '15.jpg', '16.jpg', '17.jpg', '18.jpg'],
+    ];
+  
+    const cubeFaces = document.querySelectorAll('.cube-face');
+    let currentSetIndex = 0;
+  
+    imageSets.flat().forEach((url) => {
+      const img = new Image();
+      img.src = url;
+    });
+  
+    function updateCubeImages() {
+      const currentSet = imageSets[currentSetIndex];
+      cubeFaces.forEach((face, index) => {
+        face.style.backgroundImage = `url('${currentSet[index]}')`;
+      });
+      currentSetIndex = (currentSetIndex + 1) % imageSets.length;
+    }
+  
+    setInterval(updateCubeImages, 12000);
+    updateCubeImages();
+  
+    // Timer for target date
+    const targetDate = new Date();
+    targetDate.setMonth(10); // November (Month is zero-indexed: 0 = January, 11 = December)
+    targetDate.setDate(24); // Target date
+    targetDate.setHours(0, 0, 0, 0); // Set to midnight
+  
+    function updateTimer() {
+      const now = new Date();
+      const diff = targetDate - now;
+  
+      if (diff <= 0) {
+        document.getElementById('timer').style.display = 'none';
+  
+        const message = document.createElement('div');
+        message.id = 'birthday-message';
+        message.innerText = '🎉 Happy Birthday Ra Kanna 🎂';
+  
+        message.addEventListener('click', () => {
+          window.location.href = 'letter.html'; // Replace with your desired URL
+        });
+  
+        document.body.appendChild(message);
+        clearInterval(timerInterval);
+        return;
+      }
+  
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+      document.getElementById('days').innerText = days;
+      document.getElementById('hours').innerText = hours;
+      document.getElementById('minutes').innerText = minutes;
+      document.getElementById('seconds').innerText = seconds;
+    }
+  
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+  
+</body>
+</html>

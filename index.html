@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday | Heart Shape CSS</title>
+  <link rel="icon" type="image/png" href="../../favicon_32_32_compress.ico">
+  <meta name="description" content="Happy Birthday Kanna!">
+  <style>
+    /* CSS Code */
+    @keyframes moveGradient {
+      0% {
+        background-position: 0% 0%;
+      }
+      100% {
+        background-position: 100% 0%;
+      }
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 20px);
+      background: linear-gradient(135deg, #1e3c72, #2a5298, #000428, #004e92);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+    }
+
+    .heart {
+      display: inline-block;
+      width: 200px;
+      aspect-ratio: 1;
+      border-image: radial-gradient(red 69%, #0000 70%) 84.5%/50%;
+      clip-path: polygon(-41% 0, 50% 91%, 141% 0);
+      transition: transform 0.3s ease;
+    }
+
+    .heart:hover {
+      transform: scale(1.2);
+    }
+
+    .heart.clicked {
+      transform: scale(1.3);
+    }
+
+    .heart.clicked>.heart-text {
+      color: white !important;
+    }
+
+    .heart-text {
+      margin-top: 40px;
+      font-size: 16px;
+      user-select: none;
+      color: red;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% - 20px);
+      height: calc(100% - 20px);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .instructions {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      user-select: none;
+      pointer-events: none;
+      color: white;
+      font-size: 14px;
+      transform: translate(-50%, 20px);
+      transition: all 0.3s ease;
+      text-align: center;
+      opacity: 0;
+    }
+
+    .heart:hover .instructions {
+      transform: translate(-50%, -40px);
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      .instructions {
+        transform: translate(-50%, -40px);
+        opacity: 1;
+      }
+    }
+
+    .heart.clicked .instructions {
+      opacity: 0;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      z-index: 1000;
+      background-color: transparent;
+    }
+
+    .sound-on {
+      background-image: url('sound-on.png');
+    }
+
+    .sound-off {
+      background-image: url('no-sound.png');
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sound Toggle Button -->
+  <audio id="background-music" loop autoplay>
+    <source src="sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <button class="sound-toggle sound-on" id="soundToggle"></button>
+
+  <!-- Main Heart Section -->
+  <div class="center">
+    <div class="heart" onclick="toggle(this)">
+      <p id="textInner" class="heart-text" style="opacity: 0; display: none"></p>
+      <p class="instructions"></p>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@latest"></script>
+  <script>
+    function toggle(element) {
+      const textInner = document.getElementById("textInner");
+      element.classList.toggle("clicked");
+
+      if (element.classList.contains("clicked")) {
+        textInner.style.display = "block";
+        setTimeout(() => {
+          textInner.style.opacity = "1";
+          textInner.innerHTML = `
+            <a href="last.html" style="text-decoration: none;">
+              <span style="font-size: 24px; color: pink; font-weight: bold;">💖 Happy Birthday, Kanna! 💖</span>
+            </a>
+          `;
+        }, 100);
+        createConfetti();
+      } else {
+        textInner.style.opacity = "0";
+        setTimeout(() => {
+          textInner.style.display = "none";
+        }, 300);
+      }
+    }
+
+    function createConfetti() {
+      confetti({
+        particleCount: 225,
+        scalar: 3,
+        angle: 90,
+        spread: 360,
+        startVelocity: 25,
+        decay: 0.95,
+        shapes: ['circle'],
+        origin: { x: 0.5, y: 0.4 },
+        zIndex: -1
+      });
+    }
+
+    // Sound toggle functionality
+    const soundToggleButton = document.getElementById('soundToggle');
+    const backgroundMusic = document.getElementById('background-music');
+
+    // Play the music on load
+    backgroundMusic.play();
+
+    soundToggleButton.addEventListener('click', () => {
+      if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        soundToggleButton.classList.remove('sound-off');
+        soundToggleButton.classList.add('sound-on');
+      } else {
+        backgroundMusic.pause();
+        soundToggleButton.classList.remove('sound-on');
+        soundToggleButton.classList.add('sound-off');
+      }
+    });
+  </script>
+</body>
+
+</html>
